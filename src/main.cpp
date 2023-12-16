@@ -31,15 +31,18 @@ int main() {
   cl_int platformsResult = clGetPlatformIDs(64, platforms, &platformCount);
   assert(platformsResult == CL_SUCCESS);
 
+  size_t infosize;
+  cl_int getPlatformInfoResult;
   for (int i = 0; i < platformCount; i++) {
     for (int j = 0; j < ATTRIBUTE_COUNT; j++) {
       // Get platform attribute value size
-      size_t infosize;
-      assert(clGetPlatformInfo(platforms[i], attributeTypes[j], 0, nullptr, &infosize) == CL_SUCCESS);
+      getPlatformInfoResult = clGetPlatformInfo(platforms[i], attributeTypes[j], 0, nullptr, &infosize);
+      assert(getPlatformInfoResult == CL_SUCCESS);
       char info[infosize];
 
       // Get platform attribute value
-      assert(clGetPlatformInfo(platforms[i], attributeTypes[j], infosize, info, nullptr) == CL_SUCCESS);
+      getPlatformInfoResult = clGetPlatformInfo(platforms[i], attributeTypes[j], infosize, info, nullptr);
+      assert(getPlatformInfoResult == CL_SUCCESS);
       printf("%d.%d %-11s: %s\n", i+1, j+1, attributeNames[j], info);
     }
   }
@@ -142,9 +145,9 @@ int main() {
 
   clFinish(queue);
 
-  std::cout << "Result: ";
+  std::cout << "Result:\n";
 	for ( int i = 0; i < VEC_SIZE; ++i )
-    std::cout << vecData_c[i] << std::endl;
+    std::cout << vecData_c[i] << "\n";
 
   clReleaseMemObject(vec_a);
 	clReleaseMemObject(vec_b);
